@@ -1,0 +1,117 @@
+:root {
+  --vertical-space: 2rem;
+  --horizontal-space:3rem;
+
+  --light-color: rgb(232, 232, 232);
+  --body-color: rgb(127, 0, 127);
+  --heading-color: rgb(50, 1, 156);
+}
+
+body {
+  line-height: 1.5em;
+  padding: 4em;
+  font-family: 'Roboto Mono', monospace;
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.07),rgba(0,0,0,0.01),rgba(0,0,0,0.02),rgba(0,0,0,0.03),transparent,rgba(0,0,0,0.03),rgba(0,0,0,0.01),rgba(0,0,0,0.04),rgba(0,0,0,0.05),rgba(0,0,0,0.04),rgba(0,0,0,0.08),rgba(0,0,0,0.01),rgba(0,0,0,0.1) 4px),linear-gradient(45deg, rgb(189, 40, 144),rgb(18, 10, 138));
+}
+
+main {
+  background-color: rgba(231, 231, 231, 0.534);
+  color: var(--heading-color)
+}
+
+h2, #heading {
+  color: var(--body-color);
+  text-decoration: underline;
+}
+
+h1 {
+  color: var(--light-color);
+}
+
+a, a:visited {
+  text-decoration: none;
+  color: var(--light-color);
+}
+
+footer {
+  color: var(--light-color);
+}
+
+h1, h2, h3 {
+  line-height: 1.2;
+}
+
+body#about img { height: 15em; }
+body#portfolio img { height: 15em; }
+
+p {
+  max-width: 50em;
+}
+
+body {
+  display: grid;
+  grid-template-areas: "head head"
+                       "nav main"
+                       "foot foot";
+  grid-template-columns: 1fr 4fr;
+  grid-template-rows: auto auto 1fr auto;
+}
+
+@media screen and (min-width: 25em) {
+  body {
+    grid-template-areas: "head head"
+                         "nav main"
+                         "foot foot";
+  }
+}
+
+body > * {
+  padding-left: var(--horizontal-space);
+  padding-right: var(--horizontal-space);
+}
+
+body > header {
+  grid-area: head;
+}
+
+body > nav {
+  grid-area: nav;
+}
+
+body > main {
+  grid-area: main;
+}
+
+body > footer {
+  grid-area: foot;
+}
+
+header, footer {
+  padding-top: var(--vertical-space);
+  padding-bottom: var(--vertical-space);
+}
+
+header h1, footer h1 {
+  margin: 0
+}
+
+body#portfolio ul#portfolioItems {
+  max-width: 27em;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  list-style-type: none;
+  padding: 0;
+}
+
+@media screen and (min-width: 25em) {
+  body#portfolio ul#portfolioItems {
+    flex-basis: 48%;
+    padding-right: 2%;
+  }
+}
+
+body#portfolio ul#portfolioItems li img {
+  max-width: 100%
+}
+
