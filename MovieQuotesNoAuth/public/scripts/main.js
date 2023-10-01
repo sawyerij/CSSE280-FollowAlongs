@@ -109,7 +109,7 @@ rhit.FbMovieQuotesManager = class {
 
 	}
 	beginListening(changeListener) {
-		this._unsubscribe = this._ref.onSnapshot((querySnapshot) => {
+		this._unsubscribe = this._ref.orderBy(rhit.FB_KEY_LAST_TOUCHED, "desc").limit(50).onSnapshot((querySnapshot) => {
 			console.log("Updated movie quotes");
 			this._documentSnapshots = querySnapshot.docs;
 
