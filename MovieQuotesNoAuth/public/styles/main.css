@@ -15,4 +15,6 @@ body {
     position: fixed;
     top: 10px;
     left: 10px;
+    background-color: #800000;
+    color: white;
 }
