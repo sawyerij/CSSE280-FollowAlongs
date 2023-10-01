@@ -1,0 +1,26 @@
+body {
+    background: #FFFFFF;
+}
+
+.navbar {
+    background-color: #800000;
+    color: white;
+}
+
+.page-container {
+    margin-top: 75px;
+}
+
+#fab {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    background-color: #800000;
+    color: white;
+    z-index: 999;
+}
+
+#fab:active {
+    transform: translateY(2px);
+    opacity: 0.8;
+}
