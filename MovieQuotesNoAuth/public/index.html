@@ -16,13 +16,31 @@
   </nav>
   <div id="mainPage" class="container page-container">
 
-
+  
 
   </div>
 
-  <button id="fab" type="button" class="btn bmd-btn-fab">
+  <button id="fab" type="button" class="btn bmd-btn-fab" data-toggle="modal" data-target="#addQuoteDialog">
     <i class="material-icons">add</i>
   </button>
+
+<!-- Modal -->
+<div class="modal fade" id="addQuoteDialog" tabindex="-1" role="dialog" aria-labelledby="Add Quote Dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Add Movie Quote</h5>
+      </div>
+      <div class="modal-body">
+        ... form goes here ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+        <button type="button" class="btn btn-primary">CREATE</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <script src="scripts/jquery.min.js"></script>
   <script src="scripts/popper.js"></script>
