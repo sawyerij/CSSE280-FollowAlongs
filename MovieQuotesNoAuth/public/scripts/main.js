@@ -26,15 +26,22 @@ rhit.ListPageController = class {
 			document.querySelector("#inputQuote").focus();
 		});
 
+		// Start Listening
+
+		rhit.fbMovieQuotesManager.beginListening(this.updateList.bind(this));
+
 	}
 
 	updateList() {
-
+		console.log("I need to update the list on the page");
+		console.log(`num quotes = ${rhit.fbMovieQuotesManager.length}`);
+		console.log("example quote = ", rhit.fbMovieQuotesManager.getMovieQuoteAtIndex(0));
 	}
+
 }
 
 rhit.movieQuote = class {
-	constructor() {
+	constructor(id, quote, movie) {
 		this.id = id;
 		this.quote = quote;
 		this.movie = movie;
@@ -46,7 +53,8 @@ rhit.FbMovieQuotesManager = class {
 	constructor() {
 		this._documentSnapshots = [];
 		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_MOVIEQUOTE);
-		console.log("Created movie quotes manager")
+		console.log("Created movie quotes manager");
+		this._unsubscribe = null;
 	}
 	add(quote, movie) {
 
@@ -65,10 +73,33 @@ rhit.FbMovieQuotesManager = class {
 		});
 
 	}
-	beginListening(changeListener) {}
-	stopListening() {}
-	get length() {}
-	getMovieQuoteIndex(index) {}
+	beginListening(changeListener) {
+		this._unsubscribe = this._ref.onSnapshot((querySnapshot) => {
+			console.log("Updated movie quotes");
+			this._documentSnapshots = querySnapshot.docs;
+
+			// querySnapshot.forEach((doc) => {
+			// 	console.log(doc.data());
+			// });
+
+			changeListener();
+		});
+
+	}
+
+	stopListening() {
+		this._unsubscribe();
+	}
+
+	get length() {
+			return this._documentSnapshots.length;
+	}
+
+	getMovieQuoteAtIndex(index) {
+		const docSnapshot = this._documentSnapshots[index];
+		const mq = new rhit.movieQuote(docSnapshot.id, docSnapshot.get(rhit.FB_KEY_QUOTE), docSnapshot.get(rhit.FB_KEY_MOVIE));
+		return mq;
+	}
 }
 
 
