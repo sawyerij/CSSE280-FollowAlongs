@@ -7,6 +7,14 @@ rhit.FB_KEY_MOVIE = "movie";
 rhit.FB_KEY_LAST_TOUCHED = "lastTouched";
 rhit.fbMovieQuotesManager = null;
 
+// From stackoverflow
+function htmlToElement(html) {
+	var template = document.createElement("template");
+	html = html.trim();
+	template.innerHTML = html;
+	return template.content.firstChild;
+}
+
 rhit.ListPageController = class {
 	constructor() {
 		document.querySelector("#submitAddQuote").addEventListener("click", (event) => {
@@ -32,10 +40,37 @@ rhit.ListPageController = class {
 
 	}
 
+	_createCard(movieQuote) {
+		return htmlToElement(`<div id="quoteListContainer">
+		<div class="card">
+		  <div class="card-body">
+			<h5 class="card-title">${movieQuote.quote}</h5>
+			<p class="card-text">${movieQuote.movie}</p>
+		  </div>
+		</div>   
+	  </div>`);
+	}
+
 	updateList() {
 		console.log("I need to update the list on the page");
 		console.log(`num quotes = ${rhit.fbMovieQuotesManager.length}`);
 		console.log("example quote = ", rhit.fbMovieQuotesManager.getMovieQuoteAtIndex(0));
+
+		// Make a new quoteListContainer
+		const newList = htmlToElement('<div id="quoteListContainer"></div>');
+		// Fill the quoteListContainer with the quote cards using a loop
+		for (let i = 0; i < rhit.fbMovieQuotesManager.length; i++) {
+			const mq = rhit.fbMovieQuotesManager.getMovieQuoteAtIndex(i);
+			const newCard = this._createCard(mq);
+			newList.appendChild(newCard);
+		}
+
+		// Remove the old quoteListContainer
+		const oldList = document.querySelector("#quoteListContainer");
+		oldList.removeAttribute("id");
+		oldList.hidden = true;
+		// Put in the new quoteListContainer
+		oldList.parentElement.appendChild(newList);
 	}
 
 }
