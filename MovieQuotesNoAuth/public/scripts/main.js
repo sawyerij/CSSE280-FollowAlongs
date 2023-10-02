@@ -159,6 +159,15 @@ rhit.DetailPageController = class {
 			document.querySelector("#inputQuote").focus();
 		});
 
+		document.querySelector("#submitDeleteQuote").addEventListener("click", (event) => {
+			rhit.fbSingleQuoteManager.delete().then(function() {
+				console.log("Document successfully deleted");
+				window.location.href = "/";
+			}).catch(function (error) {
+				console.error("Error removing te document: ", error);
+			});
+		});
+
 		rhit.fbSingleQuoteManager.beginListening(this.updateView.bind(this));
 	}
 	updateView() {
@@ -190,6 +199,7 @@ rhit.FbSingleQuoteManager = class {
 	stopListening() {
 		this.unsubscribe();
 	};
+
 	update(quote, movie) {
 
 		this._ref.update({
@@ -207,7 +217,9 @@ rhit.FbSingleQuoteManager = class {
 
 	};
 
-	delete() {};
+	delete() {
+		return this._ref.delete();
+	};
 
 	get Quote() {
 		return this._documentSnapshot.get(rhit.FB_KEY_QUOTE);
