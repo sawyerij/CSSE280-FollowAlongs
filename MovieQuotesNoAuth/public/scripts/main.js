@@ -40,17 +40,6 @@ rhit.ListPageController = class {
 
 	}
 
-	_createCard(movieQuote) {
-		return htmlToElement(`<div id="quoteListContainer">
-		<div class="card">
-		  <div class="card-body">
-			<h5 class="card-title">${movieQuote.quote}</h5>
-			<p class="card-text">${movieQuote.movie}</p>
-		  </div>
-		</div>   
-	  </div>`);
-	}
-
 	updateList() {
 		console.log("I need to update the list on the page");
 		console.log(`num quotes = ${rhit.fbMovieQuotesManager.length}`);
@@ -62,6 +51,13 @@ rhit.ListPageController = class {
 		for (let i = 0; i < rhit.fbMovieQuotesManager.length; i++) {
 			const mq = rhit.fbMovieQuotesManager.getMovieQuoteAtIndex(i);
 			const newCard = this._createCard(mq);
+
+			newCard.onclick = (event) => {
+				console.log(`You clicked on ${mq.id}`);
+				rhit.storage.setMovieQuoteId(mq.id);
+			}
+
+
 			newList.appendChild(newCard);
 		}
 
@@ -71,6 +67,18 @@ rhit.ListPageController = class {
 		oldList.hidden = true;
 		// Put in the new quoteListContainer
 		oldList.parentElement.appendChild(newList);
+	}
+
+	_createCard(movieQuote) {
+		return htmlToElement(
+		`<div id="quoteListContainer">
+			<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">${movieQuote.quote}</h5>
+				<p class="card-text">${movieQuote.movie}</p>
+			</div>
+			</div>   
+		 </div>`);
 	}
 
 }
@@ -112,11 +120,6 @@ rhit.FbMovieQuotesManager = class {
 		this._unsubscribe = this._ref.orderBy(rhit.FB_KEY_LAST_TOUCHED, "desc").limit(50).onSnapshot((querySnapshot) => {
 			console.log("Updated movie quotes");
 			this._documentSnapshots = querySnapshot.docs;
-
-			// querySnapshot.forEach((doc) => {
-			// 	console.log(doc.data());
-			// });
-
 			changeListener();
 		});
 
@@ -135,6 +138,21 @@ rhit.FbMovieQuotesManager = class {
 		const mq = new rhit.movieQuote(docSnapshot.id, docSnapshot.get(rhit.FB_KEY_QUOTE), docSnapshot.get(rhit.FB_KEY_MOVIE));
 		return mq;
 	}
+}
+
+
+rhit.storage = rhit.storage || {};
+rhit.storage.MOVIEQUOTE_ID_KEY = "movieQuoteID";
+rhit.storage.getMovieQuoteId = function() {
+	const mqId = sessionStorage.getItem(rhit.storage.MOVIEQUOTE_ID_KEY);
+	if (!mqId) {
+		console.log("No movie quote id in session storage");
+	}
+	return mqId;
+};
+
+rhit.storage.setMovieQuoteId = function(movieQuoteId) {
+	sessionStorage.getItem(rhit.storage.MOVIEQUOTE_ID_KEY, movieQuoteId);
 }
 
 
