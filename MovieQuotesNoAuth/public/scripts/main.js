@@ -142,7 +142,23 @@ rhit.FbMovieQuotesManager = class {
 
 rhit.DetailPageController = class {
 	constructor() {
-		console.log("Made the detail page controller");
+		document.querySelector("#submitEditQuote").addEventListener("click", (event) => {
+			const quote = document.querySelector("#inputQuote").value;
+			const movie = document.querySelector("#inputMovie").value;
+			rhit.fbSingleQuoteManager.update(quote, movie);
+		});
+
+		$("#editQuoteDialog").on("show.bs.modal", (event) => {
+			// Pre Animation
+			document.querySelector("#inputQuote").value = rhit.fbSingleQuoteManager.Quote;
+			document.querySelector("#inputMovie").value = rhit.fbSingleQuoteManager.Movie;
+		});
+
+		$("#editQuoteDialog").on("shown.bs.modal", (event) => {
+			// Post Animation
+			document.querySelector("#inputQuote").focus();
+		});
+
 		rhit.fbSingleQuoteManager.beginListening(this.updateView.bind(this));
 	}
 	updateView() {
@@ -174,7 +190,22 @@ rhit.FbSingleQuoteManager = class {
 	stopListening() {
 		this.unsubscribe();
 	};
-	update(quote, movie) {};
+	update(quote, movie) {
+
+		this._ref.update({
+			[rhit.FB_KEY_QUOTE]: quote,
+			[rhit.FB_KEY_MOVIE]: movie,
+			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
+		})
+		.then(() => {
+			console.log("Document succesfully updated");
+		})
+		.catch(function(error) {
+			// Document probably doesn't exist
+			console.log("Error updating document: ", error);
+		})
+
+	};
 
 	delete() {};
 
