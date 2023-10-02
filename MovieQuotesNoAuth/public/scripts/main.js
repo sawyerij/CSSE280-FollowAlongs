@@ -6,6 +6,7 @@ rhit.FB_KEY_QUOTE = "quote";
 rhit.FB_KEY_MOVIE = "movie";
 rhit.FB_KEY_LAST_TOUCHED = "lastTouched";
 rhit.fbMovieQuotesManager = null;
+rhit.fbSingleQuoteManager = null;
 
 // From stackoverflow
 function htmlToElement(html) {
@@ -53,8 +54,8 @@ rhit.ListPageController = class {
 			const newCard = this._createCard(mq);
 
 			newCard.onclick = (event) => {
-				rhit.storage.setMovieQuoteId(mq.id);
-				window.location.href = "/moviequote.html";
+				// rhit.storage.setMovieQuoteId(mq.id);
+				window.location.href = `/moviequote.html?id=${mq.id}`;
 			}
 			newList.appendChild(newCard);
 		}
@@ -139,19 +140,67 @@ rhit.FbMovieQuotesManager = class {
 }
 
 
-rhit.storage = rhit.storage || {};
-rhit.storage.MOVIEQUOTE_ID_KEY = "movieQuoteID";
-rhit.storage.getMovieQuoteId = function() {
-	const mqId = sessionStorage.getItem(rhit.storage.MOVIEQUOTE_ID_KEY);
-	if (!mqId) {
-		console.log("No movie quote id in session storage");
+rhit.DetailPageController = class {
+	constructor() {
+		console.log("Made the detail page controller");
+		rhit.fbSingleQuoteManager.beginListening(this.updateView.bind(this));
 	}
-	return mqId;
-};
-
-rhit.storage.setMovieQuoteId = function(movieQuoteId) {
-	sessionStorage.setItem(rhit.storage.MOVIEQUOTE_ID_KEY, movieQuoteId);
+	updateView() {
+		document.querySelector("#cardQuote").innerHTML = rhit.fbSingleQuoteManager.Quote;
+		document.querySelector("#cardMovie").innerHTML = rhit.fbSingleQuoteManager.Movie;
+	}
 }
+
+rhit.FbSingleQuoteManager = class {
+	constructor(movieQuoteId) {
+		this._documentSnapshot = {};
+		this._unsubscribe = null;
+		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_MOVIEQUOTE).doc(movieQuoteId);
+		console.log(`Listening to ${this._ref.path}`)
+	}
+
+	beginListening(changeListener) {
+		this._unsubscribe = this._ref.onSnapshot((doc) => {
+			if (doc.exists) {
+				console.log("Document data: ", doc.data());
+				this._documentSnapshot = doc;
+				changeListener();
+			} else {
+				console.log("No such document");
+			}
+		});
+	};
+
+	stopListening() {
+		this.unsubscribe();
+	};
+	update(quote, movie) {};
+
+	delete() {};
+
+	get Quote() {
+		return this._documentSnapshot.get(rhit.FB_KEY_QUOTE);
+	};
+
+	get Movie() {
+		return this._documentSnapshot.get(rhit.FB_KEY_MOVIE);
+	};
+}
+
+
+// rhit.storage = rhit.storage || {};
+// rhit.storage.MOVIEQUOTE_ID_KEY = "movieQuoteID";
+// rhit.storage.getMovieQuoteId = function() {
+// 	const mqId = sessionStorage.getItem(rhit.storage.MOVIEQUOTE_ID_KEY);
+// 	if (!mqId) {
+// 		console.log("No movie quote id in session storage");
+// 	}
+// 	return mqId;
+// };
+
+// rhit.storage.setMovieQuoteId = function(movieQuoteId) {
+// 	sessionStorage.setItem(rhit.storage.MOVIEQUOTE_ID_KEY, movieQuoteId);
+// }
 
 
 
@@ -166,8 +215,18 @@ rhit.main = function () {
 
 	if (document.querySelector("#detailPage")) {
 		console.log("You are on the detail page");
-		const movieQuoteId = rhit.storage.getMovieQuoteId();
-		console.log(`Detail page for ${movieQuoteId}`);
+		// const movieQuoteId = rhit.storage.getMovieQuoteId();
+
+		const queryString = window.location.search;
+		console.log(queryString);
+		const urlParams = new URLSearchParams(queryString);
+		const movieQuoteId = urlParams.get("id");
+
+		if (!movieQuoteId) {
+			window.location.href = "/";
+		}
+		rhit.fbSingleQuoteManager = new rhit.FbSingleQuoteManager(movieQuoteId);
+		new rhit.DetailPageController();
 	}
 
 
@@ -183,7 +242,7 @@ rhit.main = function () {
 	// 	quote: "bruh",
 	// 	movie: "bruh the movie",
 	// 	lastTouched: firebase.firestore.Timestamp.now(),
-	// });
+	// }); 
 
 };
 
