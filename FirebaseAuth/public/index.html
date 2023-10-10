@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
   <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
   <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css"/>
   <title>Firebase Auth</title>
 </head>
 
@@ -32,6 +33,9 @@
       <hr>
       <button type="button" id="anonAuthButton" class="btn btn-primary btn-outline">Use Guest Mode</button>
       <hr>
+      <div id="firebaseui-auth-container">
+        
+      </div>
 
   </div>
 
@@ -44,6 +48,7 @@
   <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
   <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
   <script src="/__/firebase/init.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 

@@ -4,7 +4,6 @@ rhit.main = function () {
 	console.log("Ready!");
 
 	firebase.auth().onAuthStateChanged((user) => {
-
 		if (user) {
 			const displayName = user.displayName;
 			const email = user.email;
@@ -23,7 +22,6 @@ rhit.main = function () {
 		} else {
 			console.log("There is no user signed in");
 		}
-
 	});
 	
 	const inputEmailEl = document.querySelector("#inputEmail");
@@ -31,7 +29,6 @@ rhit.main = function () {
 
 	document.querySelector("#signOutButton").onclick = (event) => {
 		console.log(`Sign out`);
-
 		firebase.auth().signOut().then(function () {
 			console.log("You are now signed out");
 		}).catch(function (error) {
@@ -41,7 +38,6 @@ rhit.main = function () {
 
 	document.querySelector("#createAccountButton").onclick = (event) => {
 		console.log(`Create Account for email: ${inputEmailEl.value} password: ${inputPasswordEl.value}`);
-
 		firebase.auth().createUserWithEmailAndPassword(inputEmailEl.value, inputPasswordEl.value).catch(function(error) {
 			var errorCode = error.code;
 			var errorMessage = error.code;
@@ -51,7 +47,6 @@ rhit.main = function () {
 
 	document.querySelector("#loginButton").onclick = (event) => {
 		console.log(`Login for email: ${inputEmailEl.value} password: ${inputPasswordEl.value}`);
-
 		firebase.auth().signInWithEmailAndPassword(inputEmailEl.value, inputPasswordEl.value).catch(function(error) {
 			var errorCode = error.code;
 			var errorMessage = error.code;
@@ -66,7 +61,23 @@ rhit.main = function () {
 			console.log("Anonymous auth error", errorCode, errorMessage);
 		});
 	};
+	rhit.startFirebaseUI();
+};
 
+rhit.startFirebaseUI = function() {
+	var uiConfig = {
+		signinSuccessUrl: '/',
+		signInOptions: [
+			firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+			firebase.auth.EmailAuthProvider.PROVIDER_ID,
+			firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+			firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+		],
+	};
+	// Initialize the FirebaseUI Widget using Firebase.
+	const ui = new firebaseui.auth.AuthUI(firebase.auth());
+	// The start method will wait until the DOM is loaded.
+	ui.start('#firebaseui-auth-container', uiConfig);
 };
 
 rhit.main();
