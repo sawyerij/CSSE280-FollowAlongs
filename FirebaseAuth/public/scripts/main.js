@@ -6,14 +6,20 @@ rhit.main = function () {
 	firebase.auth().onAuthStateChanged((user) => {
 
 		if (user) {
-			var displayName = user.displayName;
-			var email = user.email;
-			var emailVerified = user.emailVerified;
-			var photoURL = user.photoURL;
-			var isAnonymous = user.isAnonymous;
-			var uid = user.uid;
-			var providerData = user.providerData;	
+			const displayName = user.displayName;
+			const email = user.email;
+			const photoURL = user.photoURL;
+			const phoneNumber = user.phoneNumer;
+			const isAnonymous = user.isAnonymous;
+			const uid = user.uid;
+
 			console.log("The user is signed in ", uid);
+			console.log('displayName :>> ', displayName);
+			console.log('email :>> ', email);
+			console.log('photoURL :>> ', photoURL);
+			console.log('phoneNumber :>> ', phoneNumber);
+			console.log('isAnonymous :>> ', isAnonymous);
+			console.log('uid :>> ', uid);
 		} else {
 			console.log("There is no user signed in");
 		}
@@ -50,9 +56,16 @@ rhit.main = function () {
 			var errorCode = error.code;
 			var errorMessage = error.code;
 			console.log("Existing account log in error", errorCode, errorMessage);
-
 		});
-	}
+	};
+
+	document.querySelector("#anonAuthButton").onclick = (event) => {
+		firebase.auth().signInAnonymously().catch(function(error) {
+			var errorCode = error.code;
+			var errorMessage = error.code;
+			console.log("Anonymous auth error", errorCode, errorMessage);
+		});
+	};
 
 };
 
