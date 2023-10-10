@@ -13,7 +13,7 @@ rhit.main = function () {
 			var isAnonymous = user.isAnonymous;
 			var uid = user.uid;
 			var providerData = user.providerData;	
-			console.log("The user is signed in "), uid
+			console.log("The user is signed in ", uid);
 		} else {
 			console.log("There is no user signed in");
 		}
