@@ -11,6 +11,7 @@ rhit.main = function () {
 			const phoneNumber = user.phoneNumer;
 			const isAnonymous = user.isAnonymous;
 			const uid = user.uid;
+			
 
 			console.log("The user is signed in ", uid);
 			console.log('displayName :>> ', displayName);
