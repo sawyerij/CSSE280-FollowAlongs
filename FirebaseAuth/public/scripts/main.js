@@ -36,6 +36,8 @@ rhit.main = function () {
 		});
 	}
 
+	// test line
+
 	document.querySelector("#createAccountButton").onclick = (event) => {
 		console.log(`Create Account for email: ${inputEmailEl.value} password: ${inputPasswordEl.value}`);
 		firebase.auth().createUserWithEmailAndPassword(inputEmailEl.value, inputPasswordEl.value).catch(function(error) {
