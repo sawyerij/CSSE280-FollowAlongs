@@ -32,3 +32,9 @@ body {
 .dropdown-menu-right {
     left: -128px;
 }
+
+#roseLogo {
+    display: block;
+    margin: auto;
+    max-width: 350px;
+}
