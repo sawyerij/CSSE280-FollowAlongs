@@ -247,10 +247,70 @@ rhit.FbSingleQuoteManager = class {
 // }
 
 
+rhit.LoginPageController = class {
+	constructor() {
+		document.querySelector("#roseFireButton").onclick = (event) => {
+			rhit.fbAuthManager.signIn();
+		};
+	}
+	
+}
+
+rhit.FbAuthManager = class {
+	constructor() {
+		this._user = null;
+	}
+
+	beginListening(changeListener) {
+		firebase.auth().onAuthStateChanged((user) => {
+			this._user = user;
+			changeListener();
+		});
+
+	}
+	signIn() {
+		Rosefire.signIn("5550a927-1072-4dd5-9ada-b63086820957", (err, rfUser) => {
+			if (err) {
+			  console.log("Rosefire error!", err);
+			  return;
+			}
+			console.log("Rosefire success!", rfUser);
+
+			firebase.auth().signInWithCustomToken(rfUser.token).catch( (error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				if (errorCode === 'auth/invalid-custom-token') {
+					alert('The token you provided is not valid.');
+				} else {
+					console.log("Custom Auth error", errorCode, errorMessage);
+				}
+			});
+			
+		  });
+	 }
+
+	signOut() {
+		firebase.auth().signOut().catch(function (error) {
+			console.log("Sign out error");
+		});
+	}
+
+	get isSignedIn() {
+		return !!this._user;
+	}
+
+	get uid() {
+		return this._user.uid;
+	}
+}
 
 rhit.main = function () {
 	console.log("Ready");
 	rhit.fbAuthManager = new rhit.FbAuthManager();
+	rhit.fbAuthManager.beginListening(() => {
+		console.log("auth changed callback fired. TODO check for redirect and the init page");
+		console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
+	});
 
 	if (document.querySelector("#listPage")) {
 		console.log("You are on the list page");
@@ -295,24 +355,5 @@ rhit.main = function () {
 	// }); 
 
 };
-
-rhit.LoginPageController = class {
-	constructor() {
-		console.log("You have made the login page controller");
-	}
-}
-
-rhit.FbAuthManager = class {
-	constructor() {
-		this._user = null;
-		console.log("You have made the Auth Manager")
-	}
-
-	beginListening(changeListener) {}
-	signIn() {}
-	signOut() {}
-	get isSignedIn() {}
-	get uid() {}
-}
 
 rhit.main();
