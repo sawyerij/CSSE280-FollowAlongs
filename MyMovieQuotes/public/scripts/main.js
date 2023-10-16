@@ -7,6 +7,7 @@ rhit.FB_KEY_MOVIE = "movie";
 rhit.FB_KEY_LAST_TOUCHED = "lastTouched";
 rhit.fbMovieQuotesManager = null;
 rhit.fbSingleQuoteManager = null;
+rhit.fbAuthManager = null;
 
 // From stackoverflow
 function htmlToElement(html) {
@@ -249,6 +250,7 @@ rhit.FbSingleQuoteManager = class {
 
 rhit.main = function () {
 	console.log("Ready");
+	rhit.fbAuthManager = new rhit.FbAuthManager();
 
 	if (document.querySelector("#listPage")) {
 		console.log("You are on the list page");
@@ -272,6 +274,11 @@ rhit.main = function () {
 		new rhit.DetailPageController();
 	}
 
+	if (document.querySelector("#loginPage")) {
+		console.log("You are on the login page");
+		new rhit.LoginPageController();
+	}
+
 
 	// Temp code for read and add
 	// const ref = firebase.firestore().collection("MovieQuotes");
@@ -288,5 +295,24 @@ rhit.main = function () {
 	// }); 
 
 };
+
+rhit.LoginPageController = class {
+	constructor() {
+		console.log("You have made the login page controller");
+	}
+}
+
+rhit.FbAuthManager = class {
+	constructor() {
+		this._user = null;
+		console.log("You have made the Auth Manager")
+	}
+
+	beginListening(changeListener) {}
+	signIn() {}
+	signOut() {}
+	get isSignedIn() {}
+	get uid() {}
+}
 
 rhit.main();
