@@ -351,7 +351,7 @@ rhit.main = function () {
 
 		rhit.checkForRedirects();
 
-		initializePage();
+		rhit.initializePage();
 
 	});
 
