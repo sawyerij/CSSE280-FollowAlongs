@@ -71,7 +71,7 @@ rhit.ListPageController = class {
 
 	_createCard(movieQuote) {
 		return htmlToElement(
-		`<div id="quoteListContainer">
+			`<div id="quoteListContainer">
 			<div class="card">
 			<div class="card-body">
 				<h5 class="card-title">${movieQuote.quote}</h5>
@@ -108,12 +108,12 @@ rhit.FbMovieQuotesManager = class {
 			[rhit.FB_KEY_MOVIE]: movie,
 			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now()
 		})
-		.then(function(docref) {
-			console.log("Document written with ID: ", docref.id);
-		})
-		.catch(function (error) {	
-			console.log("Error adding document: ", error);
-		});
+			.then(function (docref) {
+				console.log("Document written with ID: ", docref.id);
+			})
+			.catch(function (error) {
+				console.log("Error adding document: ", error);
+			});
 
 	}
 	beginListening(changeListener) {
@@ -130,7 +130,7 @@ rhit.FbMovieQuotesManager = class {
 	}
 
 	get length() {
-			return this._documentSnapshots.length;
+		return this._documentSnapshots.length;
 	}
 
 	getMovieQuoteAtIndex(index) {
@@ -161,7 +161,7 @@ rhit.DetailPageController = class {
 		});
 
 		document.querySelector("#submitDeleteQuote").addEventListener("click", (event) => {
-			rhit.fbSingleQuoteManager.delete().then(function() {
+			rhit.fbSingleQuoteManager.delete().then(function () {
 				console.log("Document successfully deleted");
 				window.location.href = "/";
 			}).catch(function (error) {
@@ -208,13 +208,13 @@ rhit.FbSingleQuoteManager = class {
 			[rhit.FB_KEY_MOVIE]: movie,
 			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
 		})
-		.then(() => {
-			console.log("Document succesfully updated");
-		})
-		.catch(function(error) {
-			// Document probably doesn't exist
-			console.log("Error updating document: ", error);
-		})
+			.then(() => {
+				console.log("Document succesfully updated");
+			})
+			.catch(function (error) {
+				// Document probably doesn't exist
+				console.log("Error updating document: ", error);
+			})
 
 	};
 
@@ -253,7 +253,7 @@ rhit.LoginPageController = class {
 			rhit.fbAuthManager.signIn();
 		};
 	}
-	
+
 }
 
 rhit.FbAuthManager = class {
@@ -271,23 +271,22 @@ rhit.FbAuthManager = class {
 	signIn() {
 		Rosefire.signIn("5550a927-1072-4dd5-9ada-b63086820957", (err, rfUser) => {
 			if (err) {
-			  console.log("Rosefire error!", err);
-			  return;
+				console.log("Rosefire error!", err);
+				return;
 			}
 			console.log("Rosefire success!", rfUser);
 
-			firebase.auth().signInWithCustomToken(rfUser.token).catch( (error) => {
+			firebase.auth().signInWithCustomToken(rfUser.token).catch((error) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
 				if (errorCode === 'auth/invalid-custom-token') {
-					alert('The token you provided is not valid.');
+					alert('The token you provided is not valid');
 				} else {
-					console.log("Custom Auth error", errorCode, errorMessage);
+					console.error("Custom auth error", errorCode, errorMessage);
 				}
 			});
-			
-		  });
-	 }
+		});
+	}
 
 	signOut() {
 		firebase.auth().signOut().catch(function (error) {
@@ -304,14 +303,16 @@ rhit.FbAuthManager = class {
 	}
 }
 
-rhit.main = function () {
-	console.log("Ready");
-	rhit.fbAuthManager = new rhit.FbAuthManager();
-	rhit.fbAuthManager.beginListening(() => {
-		console.log("auth changed callback fired. TODO check for redirect and the init page");
-		console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
-	});
+rhit.checkForRedirects = function () {
+	if (document.querySelector("#loginPage") && rhit.fbAuthManager.isSignedIn) {
+		window.location.href = "/list.html";
+	}
+	if (!document.querySelector("#loginPage") && !rhit.fbAuthManager.isSignedIn) {
+		window.location.href = "/";
+	}
+};
 
+rhit.initializePage = function () {
 	if (document.querySelector("#listPage")) {
 		console.log("You are on the list page");
 		rhit.fbMovieQuotesManager = new rhit.FbMovieQuotesManager();
@@ -338,7 +339,21 @@ rhit.main = function () {
 		console.log("You are on the login page");
 		new rhit.LoginPageController();
 	}
+};
 
+
+rhit.main = function () {
+	console.log("Ready");
+	rhit.fbAuthManager = new rhit.FbAuthManager();
+	rhit.fbAuthManager.beginListening(() => {
+		console.log("auth changed callback fired. TODO check for redirect and the init page");
+		console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
+
+		rhit.checkForRedirects();
+
+		initializePage();
+
+	});
 
 	// Temp code for read and add
 	// const ref = firebase.firestore().collection("MovieQuotes");
