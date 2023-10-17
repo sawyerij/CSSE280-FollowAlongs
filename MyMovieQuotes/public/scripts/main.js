@@ -5,6 +5,7 @@ rhit.FB_COLLECTION_MOVIEQUOTE = "MovieQuotes";
 rhit.FB_KEY_QUOTE = "quote";
 rhit.FB_KEY_MOVIE = "movie";
 rhit.FB_KEY_LAST_TOUCHED = "lastTouched";
+rhit.FB_KEY_AUTHOR = "author";
 rhit.fbMovieQuotesManager = null;
 rhit.fbSingleQuoteManager = null;
 rhit.fbAuthManager = null;
@@ -19,6 +20,17 @@ function htmlToElement(html) {
 
 rhit.ListPageController = class {
 	constructor() {
+		document.querySelector("#menuShowaAllQuotes").addEventListener("click", (event) => {
+			window.location.href = "/list.html";
+		});
+		document.querySelector("#menuShowaMyQuotes").addEventListener("click", (event) => {
+			window.location.href = `/list.html?uid=${rhit.fbAuthManager.uid}`;
+		});
+		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
+			rhit.fbAuthManager.signOut();
+		});
+
+
 		document.querySelector("#submitAddQuote").addEventListener("click", (event) => {
 			const quote = document.querySelector("#inputQuote").value;
 			const movie = document.querySelector("#inputMovie").value;
@@ -93,7 +105,8 @@ rhit.movieQuote = class {
 }
 
 rhit.FbMovieQuotesManager = class {
-	constructor() {
+	constructor(uid) {
+		this._uid = uid;
 		this._documentSnapshots = [];
 		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_MOVIEQUOTE);
 		console.log("Created movie quotes manager");
@@ -106,6 +119,7 @@ rhit.FbMovieQuotesManager = class {
 		this._ref.add({
 			[rhit.FB_KEY_QUOTE]: quote,
 			[rhit.FB_KEY_MOVIE]: movie,
+			[rhit.FB_KEY_AUTHOR]: rhit.fbAuthManager.uid,
 			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now()
 		})
 			.then(function (docref) {
@@ -117,7 +131,12 @@ rhit.FbMovieQuotesManager = class {
 
 	}
 	beginListening(changeListener) {
-		this._unsubscribe = this._ref.orderBy(rhit.FB_KEY_LAST_TOUCHED, "desc").limit(50).onSnapshot((querySnapshot) => {
+
+		let query = this._ref.orderBy(rhit.FB_KEY_LAST_TOUCHED, "desc").limit(50);
+		if (this._uid) {
+			query = query.where(rhit.FB_KEY_AUTHOR, "==", this._uid);
+		}
+		this._unsubscribe = this._ref = query.onSnapshot((querySnapshot) => {
 			console.log("Updated movie quotes");
 			this._documentSnapshots = querySnapshot.docs;
 			changeListener();
@@ -313,19 +332,17 @@ rhit.checkForRedirects = function () {
 };
 
 rhit.initializePage = function () {
+	const urlParams = new URLSearchParams(window.location.search);
 	if (document.querySelector("#listPage")) {
 		console.log("You are on the list page");
-		rhit.fbMovieQuotesManager = new rhit.FbMovieQuotesManager();
+		const uid = urlParams.get("uid");
+		console.log("Got url param = ", uid);
+		rhit.fbMovieQuotesManager = new rhit.FbMovieQuotesManager(uid);
 		new rhit.ListPageController();
 	}
 
 	if (document.querySelector("#detailPage")) {
 		console.log("You are on the detail page");
-		// const movieQuoteId = rhit.storage.getMovieQuoteId();
-
-		const queryString = window.location.search;
-		console.log(queryString);
-		const urlParams = new URLSearchParams(queryString);
 		const movieQuoteId = urlParams.get("id");
 
 		if (!movieQuoteId) {
