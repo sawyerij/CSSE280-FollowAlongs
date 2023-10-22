@@ -30,7 +30,6 @@ rhit.ListPageController = class {
 			rhit.fbAuthManager.signOut();
 		});
 
-
 		document.querySelector("#submitAddQuote").addEventListener("click", (event) => {
 			const quote = document.querySelector("#inputQuote").value;
 			const movie = document.querySelector("#inputMovie").value;
@@ -197,10 +196,9 @@ rhit.DetailPageController = class {
 	updateView() {
 		document.querySelector("#cardQuote").innerHTML = rhit.fbSingleQuoteManager.Quote;
 		document.querySelector("#cardMovie").innerHTML = rhit.fbSingleQuoteManager.Movie;
-		if (fbSingleQuoteManager.author == rhit.fbAuthManager.uid) {
-			document.querySelector("menuEdit").style.display = "flex";
-			document.querySelector("menuDelete").style.display = "flex";
-
+		if (rhit.fbSingleQuoteManager.Author == rhit.fbAuthManager.uid) {
+			document.querySelector("#menuEdit").style.display = "flex";
+			document.querySelector("#menuDelete").style.display = "flex";
 		}
 	}
 }
@@ -210,7 +208,6 @@ rhit.FbSingleQuoteManager = class {
 		this._documentSnapshot = {};
 		this._unsubscribe = null;
 		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_MOVIEQUOTE).doc(movieQuoteId);
-		console.log(`Listening to ${this._ref.path}`)
 	}
 
 	beginListening(changeListener) {
