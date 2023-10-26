@@ -115,7 +115,7 @@ rhit.FbMovieQuotesManager = class {
 
 		// Add a new document with a generated ID.
 
-		this._ref.add({
+		firebase.firestore().collection(rhit.FB_COLLECTION_MOVIEQUOTE).add({
 			[rhit.FB_KEY_QUOTE]: quote,
 			[rhit.FB_KEY_MOVIE]: movie,
 			[rhit.FB_KEY_AUTHOR]: rhit.fbAuthManager.uid,
@@ -281,7 +281,6 @@ rhit.LoginPageController = class {
 			rhit.fbAuthManager.signIn();
 		};
 	}
-
 }
 
 rhit.FbAuthManager = class {
@@ -380,20 +379,6 @@ rhit.main = function () {
 		rhit.initializePage();
 
 	});
-
-	// Temp code for read and add
-	// const ref = firebase.firestore().collection("MovieQuotes");
-	// ref.onSnapshot((querySnapshot) => {
-	// 	querySnapshot.forEach((doc) => {
-	// 		console.log(doc.data());
-	// 	});
-	// });
-
-	// ref.add({
-	// 	quote: "bruh",
-	// 	movie: "bruh the movie",
-	// 	lastTouched: firebase.firestore.Timestamp.now(),
-	// }); 
 
 };
 

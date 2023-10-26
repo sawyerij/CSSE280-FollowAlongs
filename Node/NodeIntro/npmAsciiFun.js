@@ -15,7 +15,7 @@ const imgToAscii = require("ascii-img-canvas-nodejs");
 
 const opts = {};
 
-const asciiImgLocal = imgToAscii("files/node_logo.png", opts);
+const asciiImgLocal = imgToAscii("files/rose_logo.png", opts);
 asciiImgLocal.then( (asciiImgLocal) => {
     console.log(asciiImgLocal);
 });

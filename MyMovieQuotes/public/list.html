@@ -35,7 +35,7 @@
     <main class="bmd-layout-content">
       <div id="listPage" class="container page-container">
         <div id="quoteListContainer">
-        </div>  
+        </div>
       </div>
     </main>
   </div>
@@ -44,15 +44,15 @@
     <i class="material-icons">add</i>
   </button>
 
-<!-- Modal -->
-<div class="modal fade" id="addQuoteDialog" tabindex="-1" role="dialog" aria-labelledby="Add Quote Dialog" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" >Add Movie Quote</h5>
-      </div>
-      <div class="modal-body">
-      
+  <!-- Modal -->
+  <div class="modal fade" id="addQuoteDialog" tabindex="-1" role="dialog" aria-labelledby="Add Quote Dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Movie Quote</h5>
+        </div>
+        <div class="modal-body">
           <div class="form-group">
             <label for="formGroupExampleInput">Quote</label>
             <input type="text" class="form-control" id="inputQuote" placeholder="Quote">
@@ -62,16 +62,14 @@
             <input type="text" class="form-control" id="inputMovie" placeholder="Movie">
             <span class="bmd-help">What movie is this quote from?</span>
           </div>
-
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-        <button id="submitAddQuote" type="button" class="btn btn-primary" data-dismiss="modal">CREATE</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="submitAddQuote" type="button" class="btn btn-primary" data-dismiss="modal">CREATE</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <script src="scripts/jquery.min.js"></script>
   <script src="scripts/popper.js"></script>
@@ -82,6 +80,7 @@
   <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
   <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
   <script src="/__/firebase/init.js"></script>
+  <script src="scripts/rosefire.min.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 
