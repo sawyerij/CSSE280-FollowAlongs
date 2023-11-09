@@ -36,12 +36,6 @@ rhit.PageController = class {
 
 		if(this.game.isOTurn) {
 			const boardString = this.game.boardString;
-
-			// fetch(`/api/getmove/${boardString}`).then((response) => {
-			// 	return response.json();
-			// }).then((data) => {
-			// 	console.log(data);
-			// });
  
 			fetch(`http://localhost:5001/sawyerij-cloudfunctions/us-central1/api/getmove/${boardString}`)
 				.then(response => response.json() )
@@ -49,8 +43,6 @@ rhit.PageController = class {
 					this.game.pressedButtonAtIndex(data.move);
 					this.updateView();
 				});
-
-
 		}
 
 	}

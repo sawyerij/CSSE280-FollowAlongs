@@ -1,4 +1,4 @@
-const functions = require("firebase-functions/logger");
+const functions = require("firebase-functions");
 const express = require('express');
 const cors = require('cors');
 
@@ -23,6 +23,5 @@ function getOpenLocations(boardString) {
     }
     return openLocations;
 }
-
 
 exports.api = functions.https.onRequest(app);
