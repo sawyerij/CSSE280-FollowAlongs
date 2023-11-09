@@ -33,6 +33,26 @@ rhit.PageController = class {
 			square.innerHTML = this.game.getMarkAtIndex(index);
 		});
 		document.querySelector("#gameStateText").innerHTML = this.game.state;
+
+		if(this.game.isOTurn) {
+			const boardString = this.game.boardString;
+
+			// fetch(`/api/getmove/${boardString}`).then((response) => {
+			// 	return response.json();
+			// }).then((data) => {
+			// 	console.log(data);
+			// });
+
+			fetch(`/api/getmove/${boardString}`)
+				.then(response => response.json() )
+				.then(data => {
+					this.game.pressedButtonAtIndex(data.move);
+					this.updateView();
+				});
+
+
+		}
+
 	}
 };
 
@@ -117,6 +137,22 @@ rhit.Game = class {
 
 	getState() {
 		return this.state;
+	}
+
+	get isOTurn() {
+		return this.state == rhit.Game.State.O_TURN
+	}
+
+	get boardString() {
+		let boardString = "";
+		for (let k = 0; k < 9; k++) {
+		  if (this.board[k] == rhit.Game.Mark.NONE) {
+			boardString += "-";
+		  } else {
+			boardString += this.board[k];
+		  }    
+		}
+		return boardString;
 	}
 };
 
