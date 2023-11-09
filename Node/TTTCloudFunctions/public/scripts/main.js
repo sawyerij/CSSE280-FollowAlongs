@@ -43,7 +43,7 @@ rhit.PageController = class {
 			// 	console.log(data);
 			// });
  
-			fetch(`/api/getmove/${boardString}`)
+			fetch(`http://localhost:5001/sawyerij-cloudfunctions/us-central1/api/getmove/${boardString}`)
 				.then(response => response.json() )
 				.then(data => {
 					this.game.pressedButtonAtIndex(data.move);
